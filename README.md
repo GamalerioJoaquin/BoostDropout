@@ -4,6 +4,12 @@ Repositorio de apoyo para la tesis de Licenciatura en Fisica de Joaquin Ignacio 
 
 El trabajo estudia mecanismos de regularizacion estocastica en redes neuronales feed-forward densas. En particular, compara una arquitectura base sin regularizacion estocastica con variantes basadas en Dropout, DropConnect y BoostDropout, un mecanismo propuesto que reemplaza la supresion binaria por una modulacion multiplicativa no binaria de las activaciones.
 
+> **Evolucion del proyecto**
+>
+> Este repositorio es la continuacion independiente del [repositorio utilizado para la tesis](https://github.com/joacogamalerio/tesis-project-repository). La version correspondiente a la tesis queda identificada por el commit [`2d6fd9636b69670b5d7efddcd50630cb6c04b8c5`](https://github.com/joacogamalerio/tesis-project-repository/commit/2d6fd9636b69670b5d7efddcd50630cb6c04b8c5), que representa el ultimo estado del repositorio original utilizado como base para esta copia.
+>
+> A partir de esa base, este proyecto continua el desarrollo de BoostDropout mas alla del alcance de la tesis. El trabajo futuro incluira nuevos experimentos y el analisis de otros datasets y arquitecturas, junto con refactorizaciones y mejoras del proyecto.
+
 ## Contenido
 
 - `main_protocol.ipynb`: protocolo experimental principal de clasificacion sobre MNIST. Incluye preparacion reproducible, definicion de arquitecturas, particion de datos, busqueda de hiperparametros y evaluacion final multisemilla.
