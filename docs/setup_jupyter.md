@@ -1,15 +1,15 @@
-# Ejecucion local en Jupyter
+# Local Jupyter execution
 
-Notas para ejecutar los notebooks del repositorio en un entorno local de Jupyter.
+Notes for running the repository notebooks in a local Jupyter environment.
 
-## Requisitos
+## Requirements
 
-- Linux o un entorno compatible con Jupyter
+- Linux or a Jupyter-compatible environment
 - Python 3.10 o 3.11
 - JupyterLab o Notebook
-- GPU NVIDIA con drivers instalados, si se desea acelerar el entrenamiento con CUDA
+- NVIDIA GPU with drivers installed, if CUDA acceleration is desired
 
-## Crear entorno
+## Create an environment
 
 ```bash
 python3 -m venv .venv
@@ -17,54 +17,54 @@ source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-## Instalar PyTorch
+## Install PyTorch
 
-Antes de instalar PyTorch, verifica tu instalación NVIDIA:
+Before installing PyTorch, verify your NVIDIA installation:
 
 ```bash
 nvidia-smi
 ```
 
-Instala PyTorch con soporte CUDA siguiendo la variante recomendada por PyTorch para tu sistema. Ejemplo:
+Install PyTorch with CUDA support using the variant recommended by PyTorch for your system. Example:
 
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 ```
 
-Para CPU:
+For CPU:
 
 ```bash
 pip install torch torchvision torchaudio
 ```
 
-## Instalar dependencias auxiliares
+## Install auxiliary dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Levantar Jupyter
+## Start Jupyter
 ```bash
 jupyter lab
 ```
 
-o
+or
 ```bash
 jupyter notebook
 ```
 
-## Verificar que la GPU se vea desde PyTorch
+## Verify GPU visibility from PyTorch
 
-Dentro del notebook:
+Inside the notebook:
 ```python
 import torch
 print(torch.cuda.is_available())
 print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
 ```
 
-## Sugerencia de ejecución
+## Suggested execution order
 
-Primero probá un entrenamiento corto:
+First, try a short training run:
 ```python
 history_overfit, model_overfit = train_overfitnet(
     num_epochs=3,
@@ -74,10 +74,10 @@ history_overfit, model_overfit = train_overfitnet(
 )
 ```
 
-Después corré el grid search.
+Then run the grid search.
 
-## Notas
+## Notes
 
-- Los datos de MNIST se descargan en `./data`.
-- Los resultados se guardan por defecto en `./runs`.
-- `gTTS` es una dependencia opcional usada solo para avisos de audio.
+- MNIST data is downloaded to `./data`.
+- Results are saved to `./runs` by default.
+- `gTTS` is an optional dependency used only for audio notifications.
