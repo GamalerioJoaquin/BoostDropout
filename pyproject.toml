@@ -42,6 +42,10 @@ notebooks = [
   "numpy>=1.24",
   "pandas>=2.0",
 ]
+torch = [
+  "torch>=2.2",
+  "torchvision>=0.17",
+]
 dev = [
   "build>=1.2",
   "pre-commit>=4.0",
