@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "boostdropout"
+version = "0.1.0"
+description = "Reproducible research infrastructure for studying BoostDropout and stochastic regularization."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Joaquin Ignacio Gamalerio" },
+]
+keywords = [
+  "deep-learning",
+  "dropout",
+  "dropconnect",
+  "pytorch",
+  "reproducibility",
+  "regularization",
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.optional-dependencies]
+notebooks = [
+  "gTTS>=2.5",
+  "ipython>=8.0",
+  "jupyterlab>=4.0",
+  "matplotlib>=3.8",
+  "notebook>=7.0",
+  "numpy>=1.24",
+  "pandas>=2.0",
+]
+dev = [
+  "build>=1.2",
+  "pre-commit>=4.0",
+  "pytest>=8.0",
+  "ruff>=0.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/GamalerioJoaquin/BoostDropout"
+Repository = "https://github.com/GamalerioJoaquin/BoostDropout"
+Thesis = "https://rdu.unc.edu.ar/items/ca464d63-34b0-4314-897e-17bd103af950"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["boostdropout"]

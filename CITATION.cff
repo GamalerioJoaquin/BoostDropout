@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use BoostDropout, please cite the associated thesis and this repository."
+title: "BoostDropout"
+version: "0.1.0"
+type: software
+authors:
+  - family-names: Gamalerio
+    given-names: Joaquin Ignacio
+license: MIT
+repository-code: "https://github.com/GamalerioJoaquin/BoostDropout"
+url: "https://github.com/GamalerioJoaquin/BoostDropout"
+preferred-citation:
+  type: thesis
+  authors:
+    - family-names: Gamalerio
+      given-names: Joaquin Ignacio
+  title: "Effect of Random Dilution in Deep Learning"
+  institution: "FAMAF, National University of Cordoba"
+  url: "https://rdu.unc.edu.ar/items/ca464d63-34b0-4314-897e-17bd103af950"
