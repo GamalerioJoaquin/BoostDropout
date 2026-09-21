@@ -1,7 +1,7 @@
 """MNIST data access, deterministic splits, and data-loader construction."""
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 import numpy as np
 import torch
@@ -10,9 +10,7 @@ from torch.utils.data import DataLoader, Dataset, Subset
 from boostdropout.reproducibility import seed_worker_factory
 
 
-def get_mnist_transform(
-    normalize: bool = True, mean: float = 0.1307, std: float = 0.3081
-):
+def get_mnist_transform(normalize: bool = True, mean: float = 0.1307, std: float = 0.3081):
     """Return the MNIST tensor transform used by the classification protocol."""
     from torchvision import transforms
 
@@ -26,7 +24,7 @@ def count_classes_from_indices(targets: Sequence[int], indices: Sequence[int]) -
     """Count labels represented by a set of dataset indices."""
     selected_targets = np.asarray(targets)[np.asarray(indices, dtype=int)]
     labels, counts = np.unique(selected_targets, return_counts=True)
-    return {int(label): int(count) for label, count in zip(labels, counts)}
+    return {int(label): int(count) for label, count in zip(labels, counts, strict=False)}
 
 
 def create_stratified_split(
@@ -96,7 +94,10 @@ def load_small_mnist_data(
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
     dataset = datasets.MNIST(
-        root=data_dir, train=True, download=True, transform=get_mnist_transform(normalize, mean, std)
+        root=data_dir,
+        train=True,
+        download=True,
+        transform=get_mnist_transform(normalize, mean, std),
     )
     cache_path = _split_cache_path(
         cache_dir,
