@@ -46,6 +46,9 @@ torch = [
   "torch>=2.2",
   "torchvision>=0.17",
 ]
+config = [
+  "PyYAML>=6.0",
+]
 dev = [
   "build>=1.2",
   "pre-commit>=4.0",
@@ -57,6 +60,9 @@ dev = [
 Homepage = "https://github.com/GamalerioJoaquin/BoostDropout"
 Repository = "https://github.com/GamalerioJoaquin/BoostDropout"
 Thesis = "https://rdu.unc.edu.ar/items/ca464d63-34b0-4314-897e-17bd103af950"
+
+[project.scripts]
+boostdropout = "boostdropout.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

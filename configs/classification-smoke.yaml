@@ -1,0 +1,23 @@
+name: classification-smoke
+output_dir: runs
+experiment_seed: 42
+split_seed: 42
+
+data:
+  kind: synthetic
+  validation_fraction: 0.25
+  synthetic_samples: 24
+
+model:
+  name: BoostDropoutNet
+  hidden_size: 8
+  p: 0.25
+  lambd: 0.5
+  mask_normalization: false
+
+training:
+  epochs: 1
+  batch_size: 6
+  learning_rate: 0.001
+  num_workers: 0
+  device: cpu
