@@ -61,9 +61,7 @@ class BoostDropoutAutoencoder(OneHiddenLayerAutoencoder):
         mask_normalization: bool = False,
     ):
         super().__init__(input_dim=input_dim, hidden_dim=hidden_dim)
-        self.boost_dropout = BoostDropout(
-            p=p, lambd=lambd, mask_normalization=mask_normalization
-        )
+        self.boost_dropout = BoostDropout(p=p, lambd=lambd, mask_normalization=mask_normalization)
 
     def encode(self, inputs: Tensor) -> Tensor:
         return self.boost_dropout(self.encode_pre_dropout(inputs))

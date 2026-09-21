@@ -54,9 +54,7 @@ class BoostDropoutNet(OverfitNet):
     ):
         super().__init__(hidden_size=hidden_size)
         self.name = "BoostDropoutNet"
-        self.boost_dropout = BoostDropout(
-            p=p, lambd=lambd, mask_normalization=mask_normalization
-        )
+        self.boost_dropout = BoostDropout(p=p, lambd=lambd, mask_normalization=mask_normalization)
 
     def forward(self, inputs: Tensor) -> Tensor:
         outputs = self.flatten(inputs)
