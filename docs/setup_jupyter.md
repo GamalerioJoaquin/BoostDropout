@@ -58,6 +58,7 @@ jupyter notebook
 Inside the notebook:
 ```python
 import torch
+
 print(torch.cuda.is_available())
 print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
 ```
@@ -67,10 +68,7 @@ print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
 First, try a short training run:
 ```python
 history_overfit, model_overfit = train_overfitnet(
-    num_epochs=3,
-    batch_size=128,
-    normalize=False,
-    plot_curves=True
+    num_epochs=3, batch_size=128, normalize=False, plot_curves=True
 )
 ```
 
