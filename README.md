@@ -1,5 +1,9 @@
 # Effect of Random Dilution in Deep Learning
 
+[![CI](https://github.com/GamalerioJoaquin/BoostDropout/actions/workflows/ci.yml/badge.svg)](https://github.com/GamalerioJoaquin/BoostDropout/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+
 Repository supporting the Bachelor's thesis in Physics by Joaquin Ignacio Gamalerio, submitted at FAMAF, National University of Cordoba.
 
 The work studies stochastic regularization mechanisms in dense feed-forward neural networks. In particular, it compares a baseline architecture without stochastic regularization against Dropout, DropConnect, and BoostDropout variants. BoostDropout is a proposed mechanism that replaces binary suppression with a non-binary multiplicative modulation of activations.
@@ -66,3 +70,6 @@ Runs store results under `runs/`, including model weights, histories, figures, t
 - Thesis manuscript: [full document at the UNC institutional repository](https://rdu.unc.edu.ar/items/ca464d63-34b0-4314-897e-17bd103af950).
 - `docs/setup_jupyter.md`: local installation and execution notes.
 - `docs/sparsity_visualization.md`: procedure used for the autoencoder's representational-sparsity figures.
+- [`docs/architecture.md`](docs/architecture.md): research boundaries and target software architecture.
+- [`docs/development.md`](docs/development.md): development setup, quality checks, and refactor discipline.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): contribution and research-integrity expectations.

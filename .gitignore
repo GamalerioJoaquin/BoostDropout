@@ -2,6 +2,11 @@
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
 data/
 runs/
 .DS_Store
