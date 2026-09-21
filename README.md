@@ -1,33 +1,33 @@
-# Efecto de la dilucion aleatoria en aprendizaje profundo
+# Effect of Random Dilution in Deep Learning
 
-Repositorio de apoyo para la tesis de Licenciatura en Fisica de Joaquin Ignacio Gamalerio, presentada en FAMAF, Universidad Nacional de Cordoba.
+Repository supporting the Bachelor's thesis in Physics by Joaquin Ignacio Gamalerio, submitted at FAMAF, National University of Cordoba.
 
-El trabajo estudia mecanismos de regularizacion estocastica en redes neuronales feed-forward densas. En particular, compara una arquitectura base sin regularizacion estocastica con variantes basadas en Dropout, DropConnect y BoostDropout, un mecanismo propuesto que reemplaza la supresion binaria por una modulacion multiplicativa no binaria de las activaciones.
+The work studies stochastic regularization mechanisms in dense feed-forward neural networks. In particular, it compares a baseline architecture without stochastic regularization against Dropout, DropConnect, and BoostDropout variants. BoostDropout is a proposed mechanism that replaces binary suppression with a non-binary multiplicative modulation of activations.
 
-> **Evolucion del proyecto**
+> **Project evolution**
 >
-> Este repositorio es la continuacion independiente del [repositorio utilizado para la tesis](https://github.com/joacogamalerio/tesis-project-repository). La version correspondiente a la tesis queda identificada por el commit [`2d6fd9636b69670b5d7efddcd50630cb6c04b8c5`](https://github.com/joacogamalerio/tesis-project-repository/commit/2d6fd9636b69670b5d7efddcd50630cb6c04b8c5), que representa el ultimo estado del repositorio original utilizado como base para esta copia.
+> This repository is an independent continuation of the [repository used for the thesis](https://github.com/joacogamalerio/tesis-project-repository). The thesis version is identified by commit [`2d6fd9636b69670b5d7efddcd50630cb6c04b8c5`](https://github.com/joacogamalerio/tesis-project-repository/commit/2d6fd9636b69670b5d7efddcd50630cb6c04b8c5), which represents the final state of the original repository used as the basis for this copy.
 >
-> A partir de esa base, este proyecto continua el desarrollo de BoostDropout mas alla del alcance de la tesis. El trabajo futuro incluira nuevos experimentos y el analisis de otros datasets y arquitecturas, junto con refactorizaciones y mejoras del proyecto.
+> Building on that foundation, this project continues BoostDropout development beyond the scope of the thesis. Future work will include new experiments and the analysis of additional datasets and architectures, along with refactoring and further improvements.
 
-## Contenido
+## Contents
 
-- `main_protocol.ipynb`: protocolo experimental principal de clasificacion sobre MNIST. Incluye preparacion reproducible, definicion de arquitecturas, particion de datos, busqueda de hiperparametros y evaluacion final multisemilla.
-- `autoencoder_protocol.ipynb`: protocolo complementario con autoencoders para analizar cualitativamente representaciones internas, esparsidad representacional, coadaptacion y reconstrucciones.
-- `reconstruct_gridsearch_comparison_plots.ipynb`: reconstruccion de figuras comparativas de la busqueda de hiperparametros a partir de artefactos guardados.
-- `reconstruct_final_evaluation_plots.ipynb`: reconstruccion de figuras de evaluacion final a partir de corridas persistidas.
-- `requirements.txt`: dependencias Python auxiliares. PyTorch y torchvision deben instalarse segun la plataforma disponible.
-- `docs/`: documentacion de soporte y copia del manuscrito de tesis.
+- `main_protocol.ipynb`: main classification protocol on MNIST. Includes reproducible preparation, architecture definitions, data splitting, hyperparameter search, and multi-seed final evaluation.
+- `autoencoder_protocol.ipynb`: complementary autoencoder protocol for qualitative analysis of internal representations, representational sparsity, co-adaptation, and reconstructions.
+- `reconstruct_gridsearch_comparison_plots.ipynb`: reconstruction of comparative hyperparameter-search figures from saved artifacts.
+- `reconstruct_final_evaluation_plots.ipynb`: reconstruction of final-evaluation figures from persisted runs.
+- `requirements.txt`: auxiliary Python dependencies. PyTorch and torchvision should be installed according to the available platform.
+- `docs/`: supporting documentation.
 
-## Protocolos experimentales
+## Experimental protocols
 
-El protocolo principal compara redes densas de topologia comun `784 -> 256 -> 256 -> 256 -> 10` sobre un subconjunto controlado de MNIST. La comparacion se organiza en dos etapas: una busqueda de hiperparametros con multiples semillas por configuracion y una evaluacion final con nuevas semillas compartidas entre arquitecturas. Los resultados se separan por criterio de seleccion de modelo, incluyendo mejor modelo de validacion y early stopping.
+The main protocol compares dense networks with a shared `784 -> 256 -> 256 -> 256 -> 10` topology on a controlled MNIST subset. The comparison is organized into two stages: a hyperparameter search with multiple seeds per configuration and a final evaluation with new seeds shared across architectures. Results are separated by model-selection criterion, including best validation model and early stopping.
 
-El protocolo complementario usa autoencoders de arquitectura `784 -> 256 -> 784`. Su objetivo no es optimizar exhaustivamente la reconstruccion, sino inspeccionar como los mecanismos de regularizacion modifican las caracteristicas aprendidas, la esparsidad de activaciones y las reconstrucciones sobre MNIST.
+The complementary protocol uses autoencoders with a `784 -> 256 -> 784` architecture. Its goal is not to exhaustively optimize reconstruction, but to inspect how regularization mechanisms affect learned features, activation sparsity, and reconstructions on MNIST.
 
-## Instalacion
+## Installation
 
-Crear un entorno virtual:
+Create a virtual environment:
 
 ```bash
 python3 -m venv .venv
@@ -35,34 +35,34 @@ source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-Instalar PyTorch y torchvision segun el entorno. Para CPU:
+Install PyTorch and torchvision according to your environment. For CPU:
 
 ```bash
 pip install torch torchvision torchaudio
 ```
 
-Para GPU con CUDA, usar el indice recomendado por PyTorch para la version instalada del driver. Luego instalar el resto de dependencias:
+For a CUDA-enabled GPU, use the index recommended by PyTorch for the installed driver version. Then install the remaining dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Ejecucion
+## Execution
 
-Abrir Jupyter desde la raiz del repositorio:
+Open Jupyter from the repository root:
 
 ```bash
 jupyter lab
 ```
 
-Ejecutar primero celdas de preparacion y definicion. Las celdas de entrenamiento final y busqueda de hiperparametros pueden tener costo computacional alto; conviene lanzar solo el bloque correspondiente al experimento que se quiera reproducir.
+Run the preparation and definition cells first. The final-training and hyperparameter-search cells can be computationally expensive; run only the block corresponding to the experiment you want to reproduce.
 
-## Artefactos
+## Artifacts
 
-Las corridas guardan resultados bajo `runs/`, incluyendo pesos de modelos, historiales, figuras, tablas y metadata. Esa carpeta puede crecer rapidamente y no es necesaria para entender el codigo base, pero permite reconstruir las figuras y tablas generadas por los notebooks de reconstruccion.
+Runs store results under `runs/`, including model weights, histories, figures, tables, and metadata. This directory can grow quickly and is not required to understand the base code, but it allows the figures and tables generated by the reconstruction notebooks to be reproduced.
 
-## Documentacion
+## Documentation
 
-- `docs/Tesis_Gamalerio_Joaquín.pdf`: manuscrito completo de la tesis.
-- `docs/setup_jupyter.md`: notas de instalacion y ejecucion local.
-- `docs/sparsity_visualization.md`: procedimiento usado para las figuras de esparsidad representacional del autoencoder.
+- Thesis manuscript: [full document at the UNC institutional repository](https://rdu.unc.edu.ar/items/ca464d63-34b0-4314-897e-17bd103af950).
+- `docs/setup_jupyter.md`: local installation and execution notes.
+- `docs/sparsity_visualization.md`: procedure used for the autoencoder's representational-sparsity figures.

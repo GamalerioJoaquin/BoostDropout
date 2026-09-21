@@ -1,11 +1,11 @@
-# Procedimiento corto para reproducir la figura de sparsity
+# Short procedure for reproducing the sparsity figure
 
-1. Entrenar un autoencoder de una sola capa oculta sobre MNIST con arquitectura `784 -> 256 -> 784` y activaciones **ReLU** en la capa latente. En la versión con Dropout, usar la probabilidad definida para la comparación correspondiente.
-2. Tomar **un minibatch aleatorio del conjunto de test**.
-3. Para ese único minibatch, computar las activaciones ocultas `h` de tamaño `[batch_size, 256]`.
-4. Graficar dos histogramas:
-   - **Izquierda**: la distribución de la **media de activación por unidad oculta** a través del minibatch, o sea `mean(h, dim=0)`.
-   - **Derecha**: la distribución de **todas las activaciones** del mismo minibatch, o sea `h.flatten()`.
-5. Para la variante con Dropout, no aplicar un escalado adicional de pesos al momento de construir la figura. La comparación debe reflejar las activaciones obtenidas bajo el procedimiento definido para evaluación.
+1. Train a single-hidden-layer autoencoder on MNIST with architecture `784 -> 256 -> 784` and **ReLU** activations in the latent layer. For the Dropout variant, use the probability defined for the corresponding comparison.
+2. Take **one random minibatch from the test set**.
+3. For that minibatch, compute the hidden activations `h` with shape `[batch_size, 256]`.
+4. Plot two histograms:
+   - **Left**: the distribution of the **mean activation per hidden unit** across the minibatch, that is, `mean(h, dim=0)`.
+   - **Right**: the distribution of **all activations** in the same minibatch, that is, `h.flatten()`.
+5. For the Dropout variant, do not apply additional weight scaling when building the figure. The comparison should reflect the activations obtained under the evaluation procedure.
 
-Este procedimiento es el que implementa `plot_representational_sparsity_from_model_path(...)` en `autoencoder_protocol.ipynb`.
+This is the procedure implemented by `plot_representational_sparsity_from_model_path(...)` in `autoencoder_protocol.ipynb`.
