@@ -1,6 +1,7 @@
 """Deterministic-friendly classification training loops."""
 
 from collections.abc import Callable
+from time import perf_counter
 
 import torch
 from torch import nn
@@ -81,3 +82,26 @@ def train_classifier(
         if on_epoch_end is not None:
             on_epoch_end(epoch, train_metrics, validation_metrics)
     return history
+
+
+def run_classifier_epochs(
+    model: nn.Module,
+    train_loader: DataLoader,
+    validation_loader: DataLoader,
+    loss_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    optimizer: Optimizer,
+    device: torch.device,
+    epochs: int,
+    on_epoch_end: Callable[[int, ClassificationMetrics, ClassificationMetrics], None],
+) -> float:
+    """Run the thesis epoch loop and return compute time, excluding artifact callbacks."""
+    if epochs < 1:
+        raise ValueError("epochs must be at least one")
+    elapsed_seconds = 0.0
+    for epoch in range(1, epochs + 1):
+        started = perf_counter()
+        train_metrics = train_one_epoch(model, train_loader, loss_fn, optimizer, device)
+        validation_metrics = evaluate_one_epoch(model, validation_loader, loss_fn, device)
+        elapsed_seconds += perf_counter() - started
+        on_epoch_end(epoch, train_metrics, validation_metrics)
+    return elapsed_seconds
