@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from torch.utils.data import TensorDataset
 
-from .configuration import ExperimentConfig, ModelConfig
+from .configuration import ExperimentConfig, ModelConfig, validate_config
 from .data import load_small_mnist_data, make_train_validation_dataloaders
 from .models import build_classification_model
 from .reproducibility import SeedConfiguration, set_global_determinism
@@ -43,6 +43,7 @@ def _datasets(config: ExperimentConfig):
 
 def run_experiment(config: ExperimentConfig, project_root: str | Path = ".") -> Path:
     """Run one validated configuration and return its traceable artefact directory."""
+    validate_config(config)
     set_global_determinism(config.experiment_seed)
     device = torch.device(config.training.device)
     train_dataset, validation_dataset = _datasets(config)
@@ -80,6 +81,7 @@ def run_experiment(config: ExperimentConfig, project_root: str | Path = ".") -> 
     )
     store.save_history(history)
     store.save_checkpoint(model, optimizer, config.training.epochs, history)
+    store.finalize()
     return store.path
 
 
@@ -112,6 +114,8 @@ def run_grid_search(config: ExperimentConfig, parameter_grid: dict[str, list[Any
     unknown = set(parameter_grid) - {"p", "lambd", "hidden_size"}
     if unknown:
         raise ValueError(f"Unsupported grid parameters: {', '.join(sorted(unknown))}.")
+    if not parameter_grid or any(not values for values in parameter_grid.values()):
+        raise ValueError("The grid must contain at least one nonempty parameter list.")
     keys = list(parameter_grid)
     paths: list[Path] = []
     for values in product(*(parameter_grid[key] for key in keys)):

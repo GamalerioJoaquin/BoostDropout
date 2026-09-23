@@ -18,11 +18,10 @@ The published manuscript is available through the
 
 ## Current boundary
 
-At this stage, the notebooks remain the source of the experimental logic. The
-`src/boostdropout` package establishes an importable and testable boundary but
-does not yet contain model, training, or data code. This is deliberate: the
-first phase introduces engineering controls before any scientific behavior is
-migrated.
+The package owns reusable model, data, training, artifact, configuration, and
+visualization behavior. The notebooks remain interfaces for exploration,
+analysis, and thesis-specific workflows. Their compatibility wrappers preserve
+the historical artifact layouts while delegating shared behavior to `src/`.
 
 ## Target architecture
 
@@ -30,13 +29,12 @@ migrated.
 src/boostdropout/
 ├── models/          # Baseline, Dropout, DropConnect, and BoostDropout
 ├── data/            # Datasets, transforms, splits, and normalization
-├── training/        # Seeding, loops, evaluation, metrics, and artifacts
-├── experiments/     # Reproducible experiment orchestration
+├── training/        # Loops, evaluation, metrics, and artifacts
+├── experiments.py   # Reproducible experiment orchestration
 └── visualization/   # Curves, sparsity, co-adaptation, reconstructions
 ```
 
-Notebooks will become consumers of these modules. They will remain useful for
-exploration and analysis, but reusable logic must live in `src/`.
+Notebooks consume these modules and remain useful for exploration and analysis.
 
 ## Reproducibility contract
 

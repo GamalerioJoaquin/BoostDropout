@@ -29,5 +29,7 @@ jobs:
         run: ruff check .
       - name: Test
         run: python -m pytest
+      - name: Exercise command-line smoke run
+        run: python -m boostdropout.cli --help && python -m boostdropout.cli train --config configs/classification-smoke.yaml
       - name: Build distribution
         run: python -m build

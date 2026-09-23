@@ -6,7 +6,13 @@ from pathlib import Path
 import pytest
 
 from boostdropout.cli import main
-from boostdropout.configuration import load_experiment_config
+from boostdropout.configuration import (
+    DataConfig,
+    ExperimentConfig,
+    ModelConfig,
+    load_experiment_config,
+    validate_config,
+)
 
 
 def _config(path: Path) -> Path:
@@ -52,3 +58,17 @@ def test_each_cli_command_exposes_help(command, capsys):
         main([command, "--help"])
     assert exit_info.value.code == 0
     assert "usage:" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "config",
+    [
+        ExperimentConfig(name="../outside"),
+        ExperimentConfig(name="valid", data=DataConfig(validation_fraction=1)),
+        ExperimentConfig(name="valid", data=DataConfig(synthetic_samples=1)),
+        ExperimentConfig(name="valid", model=ModelConfig(name="DropConnectNet", p=1)),
+    ],
+)
+def test_invalid_configuration_is_rejected_before_a_run(config):
+    with pytest.raises(ValueError):
+        validate_config(config)

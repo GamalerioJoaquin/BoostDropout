@@ -5,7 +5,9 @@ import platform
 import subprocess
 import sys
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+from hashlib import sha256
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
@@ -54,18 +56,26 @@ def _git_value(arguments: list[str], project_root: Path) -> str | None:
 def collect_runtime_metadata(project_root: str | Path = ".") -> dict[str, Any]:
     """Collect the code and runtime facts needed to reproduce a run."""
     root = Path(project_root).resolve()
+    try:
+        package_version = version("boostdropout")
+    except PackageNotFoundError:
+        package_version = "uninstalled"
+    git_status = _git_value(["status", "--porcelain"], root)
     return {
-        "created_at": datetime.now(UTC).isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
         "git": {
             "commit": _git_value(["rev-parse", "HEAD"], root),
             "branch": _git_value(["branch", "--show-current"], root),
-            "dirty": _git_value(["status", "--porcelain"], root) != "",
+            "dirty": None if git_status is None else git_status != "",
         },
         "runtime": {
+            "boostdropout": package_version,
             "python": sys.version.split()[0],
             "platform": platform.platform(),
+            "numpy": np.__version__,
             "torch": torch.__version__,
             "cuda_available": torch.cuda.is_available(),
+            "torch_cuda": torch.version.cuda,
         },
     }
 
@@ -74,7 +84,7 @@ class RunArtifactStore:
     """Persist checkpoints, history and metadata in one isolated run directory."""
 
     def __init__(self, root: str | Path, run_name: str, project_root: str | Path = ".") -> None:
-        timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         self.run_id = f"{timestamp}-{run_name}-{uuid.uuid4().hex[:8]}"
         self.path = Path(root) / self.run_id
         self.path.mkdir(parents=True, exist_ok=False)
@@ -114,3 +124,19 @@ class RunArtifactStore:
             path,
         )
         return path
+
+    def finalize(self) -> Path:
+        """Record artifact locations and SHA-256 checksums in run metadata."""
+        metadata_path = self.path / "metadata.json"
+        payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+        artifacts = {}
+        for path in sorted(self.path.iterdir()):
+            if not path.is_file() or path == metadata_path:
+                continue
+            digest = sha256()
+            with path.open("rb") as file:
+                for chunk in iter(lambda: file.read(1024 * 1024), b""):
+                    digest.update(chunk)
+            artifacts[path.name] = {"path": str(path), "sha256": digest.hexdigest()}
+        payload["artifacts"] = artifacts
+        return save_json(metadata_path, payload)

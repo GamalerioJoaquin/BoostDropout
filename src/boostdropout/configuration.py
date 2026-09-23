@@ -1,7 +1,9 @@
 """Validated declarative experiment configuration."""
 
 from dataclasses import asdict, dataclass, field
+from math import isfinite
 from pathlib import Path
+from re import fullmatch
 from typing import Any
 
 import yaml
@@ -70,8 +72,23 @@ def _section(payload: dict[str, Any], key: str, type_: type[Any]) -> Any:
 
 def validate_config(config: ExperimentConfig) -> ExperimentConfig:
     """Validate semantic constraints before any files or compute are created."""
+    if not isinstance(config.name, str) or not config.name.strip():
+        raise ValueError("name must be a nonempty string.")
+    if fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", config.name) is None:
+        raise ValueError("name may contain only letters, digits, dots, underscores, and hyphens.")
+    if not isinstance(config.output_dir, str) or not config.output_dir.strip():
+        raise ValueError("output_dir must be a nonempty string.")
+    for seed in (config.experiment_seed, config.split_seed):
+        if type(seed) is not int or seed < 0 or seed >= 2**32:
+            raise ValueError("Seeds must be integers in [0, 2**32).")
     if config.data.kind not in {"mnist", "synthetic"}:
         raise ValueError("data.kind must be 'mnist' or 'synthetic'.")
+    if not 0 < config.data.train_fraction <= 1:
+        raise ValueError("data.train_fraction must be in (0, 1].")
+    if not 0 < config.data.validation_fraction < 1:
+        raise ValueError("data.validation_fraction must be in (0, 1).")
+    if type(config.data.synthetic_samples) is not int or config.data.synthetic_samples < 2:
+        raise ValueError("data.synthetic_samples must be at least two.")
     if config.model.name.lower() not in {
         "overfitnet",
         "dropoutnet",
@@ -83,8 +100,20 @@ def validate_config(config: ExperimentConfig) -> ExperimentConfig:
         raise ValueError("model.hidden_size and training.epochs must be positive.")
     if config.training.batch_size < 1 or config.training.learning_rate <= 0:
         raise ValueError("training.batch_size and training.learning_rate must be positive.")
+    if not isfinite(config.training.learning_rate) or not isfinite(config.training.weight_decay):
+        raise ValueError("Optimizer parameters must be finite.")
+    if config.training.weight_decay < 0 or config.training.num_workers < 0:
+        raise ValueError("weight_decay and num_workers must be nonnegative.")
+    if not isinstance(config.training.device, str):
+        raise ValueError("training.device must be a string.")
+    if config.training.device not in {"cpu", "cuda", "mps"} and not (
+        config.training.device.startswith("cuda:") and config.training.device[5:].isdigit()
+    ):
+        raise ValueError("training.device must be cpu, cuda, cuda:N, or mps.")
     if not 0 <= config.model.p <= 1:
         raise ValueError("model.p must be between 0 and 1.")
+    if not isfinite(config.model.lambd):
+        raise ValueError("model.lambd must be finite.")
     if config.model.name.lower() == "dropconnectnet" and config.model.p == 1:
         raise ValueError("DropConnect requires model.p to be less than 1.")
     return config
@@ -96,6 +125,18 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
     payload = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("The configuration document must contain a YAML mapping.")
+    unknown = set(payload) - {
+        "name",
+        "output_dir",
+        "experiment_seed",
+        "split_seed",
+        "data",
+        "model",
+        "training",
+        "grid",
+    }
+    if unknown:
+        raise ValueError(f"Unknown configuration fields: {', '.join(sorted(unknown))}.")
     try:
         config = ExperimentConfig(
             name=payload["name"],

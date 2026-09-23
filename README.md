@@ -39,16 +39,18 @@ source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-Install PyTorch and torchvision according to your environment. For CPU:
+Install the package with the components needed for the reproducible command-line
+workflow. For CPU:
 
 ```bash
-pip install torch torchvision torchaudio
+python -m pip install -e ".[torch,config,visualization]"
 ```
 
-For a CUDA-enabled GPU, use the index recommended by PyTorch for the installed driver version. Then install the remaining dependencies:
+For a CUDA-enabled GPU, install PyTorch using the index recommended for the
+installed driver version, then install the package extras:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -e ".[config,visualization]"
 ```
 
 ## Execution
@@ -78,4 +80,6 @@ Runs store results under `runs/`, including model weights, histories, figures, t
 - [`docs/architecture.md`](docs/architecture.md): research boundaries and target software architecture.
 - [`docs/development.md`](docs/development.md): development setup, quality checks, and refactor discipline.
 - [`docs/running-experiments.md`](docs/running-experiments.md): YAML configuration and command-line runs.
+- [`docs/visualization.md`](docs/visualization.md): reusable figure generation.
+- [`docs/versioning.md`](docs/versioning.md): versioning and release policy.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): contribution and research-integrity expectations.

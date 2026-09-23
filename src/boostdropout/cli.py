@@ -4,11 +4,6 @@ import argparse
 import json
 from pathlib import Path
 
-import yaml
-
-from .configuration import load_experiment_config
-from .experiments import evaluate_run, run_experiment, run_grid_search
-
 
 def _write_history_svg(run_dir: Path) -> Path:
     history = json.loads((run_dir / "history.json").read_text(encoding="utf-8"))
@@ -61,12 +56,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "reproduce-figures":
         print(_write_history_svg(args.run_dir))
         return 0
+    from .configuration import load_experiment_config
+    from .experiments import evaluate_run, run_experiment, run_grid_search
+
     config = load_experiment_config(args.config)
     if args.command == "train":
         print(run_experiment(config))
     elif args.command == "evaluate":
         print(json.dumps(evaluate_run(args.run_dir, config), sort_keys=True))
     else:
+        import yaml
+
         payload = yaml.safe_load(args.config.read_text(encoding="utf-8"))
         print("\n".join(map(str, run_grid_search(config, payload.get("grid", {})))))
     return 0

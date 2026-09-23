@@ -2,7 +2,7 @@
 
 This directory is reserved for version-controlled experiment configurations.
 
-During the engineering-foundation phase, no experimental configuration is moved
-from notebooks. In Phase 5, configurations will define datasets, architectures,
-seeds, hyperparameters, and artifact locations declaratively. Each executed
-configuration must be copied or referenced from the run metadata.
+Configurations define datasets, architectures, seeds, hyperparameters, and
+artifact locations declaratively. `classification-smoke.yaml` is the CPU-only
+synthetic smoke configuration used to validate the execution path. Each run
+stores the effective configuration in its metadata.

@@ -24,11 +24,14 @@ def test_short_run_produces_history_checkpoint_and_traceable_metadata(tmp_path):
     )
     history_path = store.save_history(history)
     checkpoint_path = store.save_checkpoint(model, optimizer, epoch=1, history=history)
+    store.finalize()
 
     assert len(history["train_loss"]) == 1
     assert history_path.exists() and checkpoint_path.exists()
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     assert {"configuration", "seeds", "git", "runtime", "created_at"} <= metadata.keys()
+    assert metadata["artifacts"]["last.pt"]["sha256"]
+    assert metadata["runtime"]["boostdropout"]
     metrics = evaluate_checkpoint(
         checkpoint_path,
         OverfitNet(hidden_size=8),
